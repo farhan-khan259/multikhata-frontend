@@ -1,0 +1,3 @@
+import {minor} from './amount.js';
+const order=(a,b)=>(a.data.date||'').localeCompare(b.data.date||'')||(a.data.time||'').localeCompare(b.data.time||'')||(a.updatedAt||'').localeCompare(b.updatedAt||'')||(a.id||'').localeCompare(b.id||'');
+export function partySettlement(records,partyId){const rows=records.filter(r=>r.kind==='entry'&&!r.deleted&&(!partyId||r.data.partyId===partyId)).sort(order),rowValues=new Map();let netPKR=0n;for(const r of rows){if(r.data.currency!=='PKR')throw new Error('Convert the legacy data to PKR before opening this khata.');const delta=(r.data.direction==='given'?1n:-1n)*minor(r.data.amount);netPKR+=delta;rowValues.set(r.id,{delta,balance:netPKR});}return {netPKR,rows,rowValues};}
