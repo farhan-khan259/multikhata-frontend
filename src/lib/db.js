@@ -1,0 +1,37 @@
+import {schemas} from '../../../shared/schema.js';
+import {needsPkrUpgrade,upgradePkrRecord} from '../../../shared/legacy-pkr.js';
+import {openDB} from 'idb';
+let database;
+export function db(){return database??=openDB('multi-khata-v1',3,{upgrade(d,oldVersion,newVersion,tx){if(!d.objectStoreNames.contains('records'))d.createObjectStore('records',{keyPath:'key'});if(!d.objectStoreNames.contains('outbox'))d.createObjectStore('outbox',{keyPath:'key'});if(!d.objectStoreNames.contains('meta'))d.createObjectStore('meta',{keyPath:'user'});for(const name of ['records','outbox']){const store=tx.objectStore(name);if(!store.indexNames.contains('user'))store.createIndex('user','user');}}});}
+const key=(user,id)=>user+':'+id;
+export async function readBackupRecords(user){return await (await db()).getAllFromIndex('records','user',user);}
+export async function readAll(user){await upgradeLocalPkr(user);const d=await db();return await d.getAllFromIndex('records','user',user);}
+export async function upgradeLocalPkr(user){const d=await db(),tx=d.transaction(['records','outbox','meta'],'readwrite');try{const previous=await tx.objectStore('meta').get(user);if(previous?.pkrUpgradeVersion===1){await tx.done;return;}const rows=await tx.objectStore('records').index('user').getAll(user),queued=await tx.objectStore('outbox').index('user').getAll(user);const convert=r=>({...upgradePkrRecord(r),...(r.conflict?.remote?{conflict:{...r.conflict,remote:upgradePkrRecord(r.conflict.remote)}}:{})});const changed=rows.filter(r=>needsPkrUpgrade(r)||r.conflict?.remote&&needsPkrUpgrade(r.conflict.remote)).map(r=>({original:r,next:convert(r)})),ops=queued.filter(needsPkrUpgrade).map(r=>({original:r,next:convert(r)}));if(changed.length||ops.length){await tx.objectStore('meta').put({...previous,user,pkrUpgradeBackup:[...(previous?.pkrUpgradeBackup||[]),...changed.map(r=>r.original)],pkrUpgradeQueueBackup:[...(previous?.pkrUpgradeQueueBackup||[]),...ops.map(r=>r.original)]});for(const r of changed)await tx.objectStore('records').put(r.next);for(const r of ops)await tx.objectStore('outbox').put(r.next);}const meta=await tx.objectStore('meta').get(user);await tx.objectStore('meta').put({...meta,user,pkrUpgradeVersion:1});await tx.done;}catch(e){tx.abort();await tx.done.catch(()=>{});throw e;}}
+
+export async function pending(user){await upgradeLocalPkr(user);return await (await db()).getAllFromIndex('outbox','user',user);}
+export async function saveLocal(user,record){
+ if(['entry','bankentry','bank','cashentry','transfer'].includes(record.kind))record={...record,data:schemas[record.kind].parse(record.data)};
+ const d=await db(),tx=d.transaction(['records','outbox'],'readwrite'),k=key(user,record.id);
+ const old=await tx.objectStore('records').get(k),op=await tx.objectStore('outbox').get(k);
+ if(old?.conflict)throw new Error('Resolve the sync conflict before editing this record.');
+ const baseRev=op?.baseRev??old?.rev??0;
+ const operation={key:k,user,opId:crypto.randomUUID(),id:record.id,kind:record.kind,baseRev,deleted:!!record.deleted,data:record.data};
+ await tx.objectStore('records').put({...record,deleted:!!record.deleted,key:k,user,rev:old?.rev??0,dirty:true,conflict:null,updatedAt:new Date().toISOString()});
+ await tx.objectStore('outbox').put(operation);await tx.done;
+}
+export async function acknowledge(user,sent,result){
+ const d=await db(),tx=d.transaction(['records','outbox'],'readwrite'),k=key(user,sent.id),q=await tx.objectStore('outbox').get(k),local=await tx.objectStore('records').get(k);
+ if(!q){await tx.done;return;}
+ if(result.status==='conflict'){
+   await tx.objectStore('records').put({...local,conflict:{remote:result.record}});await tx.objectStore('outbox').delete(k);
+ }else if(q.opId===sent.opId){await tx.objectStore('records').put({...result.record,key:k,user,dirty:false,conflict:null});await tx.objectStore('outbox').delete(k);
+ }else{await tx.objectStore('outbox').put({...q,baseRev:result.record.rev});await tx.objectStore('records').put({...local,rev:result.record.rev});}
+ await tx.done;
+}
+export async function mergeRemote(user,records){const originals=records.filter(needsPkrUpgrade);records=records.map(r=>upgradePkrRecord(r));const d=await db(),tx=d.transaction(['records','meta'],'readwrite');if(originals.length){const meta=await tx.objectStore('meta').get(user);await tx.objectStore('meta').put({...meta,user,pkrUpgradeRemoteBackup:[...(meta?.pkrUpgradeRemoteBackup||[]),...originals]});}const store=tx.objectStore('records');for(const r of records){const k=key(user,r.id),local=await store.get(k);if(!local?.dirty&&!local?.conflict&&(!local||r.rev>=local.rev))await store.put({...r,key:k,user,dirty:false,conflict:null});}await tx.done;}
+export async function resolveConflict(user,id,useLocal){const d=await db(),tx=d.transaction(['records','outbox'],'readwrite'),k=key(user,id),local=await tx.objectStore('records').get(k);if(!local?.conflict)throw new Error('No conflict found');const remote=local.conflict.remote;if(useLocal){await tx.objectStore('records').put({...local,conflict:null,dirty:true,rev:remote?.rev??0});await tx.objectStore('outbox').put({key:k,user,id,opId:crypto.randomUUID(),kind:local.kind,data:local.data,deleted:!!local.deleted,baseRev:remote?.rev??0});}else{if(remote)await tx.objectStore('records').put({...remote,key:k,user,dirty:false,conflict:null});else await tx.objectStore('records').delete(k);}await tx.done;}
+export async function seedDemo(user,records){const d=await db(),tx=d.transaction('records','readwrite');for(const r of records)await tx.store.put({...r,key:key(user,r.id),user,rev:0,dirty:false,deleted:false,updatedAt:new Date().toISOString()});await tx.done;}
+// A reset epoch prevents old device queues from resurrecting deleted account data.
+export async function ensureEpoch(user,epoch=0){const d=await db(),tx=d.transaction(['records','outbox','meta'],'readwrite'),previous=await tx.objectStore('meta').get(user);if(previous&&previous.epoch>epoch){await tx.done;throw new Error('This device has a newer account reset. Please sign in again.');}let cleared=false;if((previous?.epoch??0)!==epoch){for(const name of ['records','outbox']){for(const row of await tx.objectStore(name).index('user').getAll(user))await tx.objectStore(name).delete(row.key);}cleared=true;}await tx.objectStore('meta').put({...(!cleared?previous:{}),user,epoch});await tx.done;return cleared;}
+export async function clearLocal(user,epoch=0){const d=await db(),tx=d.transaction(['records','outbox','meta'],'readwrite');for(const name of ['records','outbox'])for(const row of await tx.objectStore(name).index('user').getAll(user))await tx.objectStore(name).delete(row.key);await tx.objectStore('meta').put({user,epoch});await tx.done;}
+export async function importRecords(user,records){const d=await db(),tx=d.transaction(['records','outbox'],'readwrite');const current=(await tx.objectStore('records').index('user').getAll(user)).filter(r=>!r.deleted),q=await tx.objectStore('outbox').index('user').getAll(user);if(current.length||q.length){await tx.done;throw new Error('Restore needs an empty khata. Export your current data before resetting it.');}for(const r of records){const k=key(user,r.id),opId=crypto.randomUUID();await tx.objectStore('records').put({...r,key:k,user,rev:0,dirty:true,conflict:null,updatedAt:new Date().toISOString()});await tx.objectStore('outbox').put({key:k,user,id:r.id,opId,kind:r.kind,data:r.data,deleted:false,baseRev:0});}await tx.done;}
