@@ -1,0 +1,53 @@
+/* Requested color changes, calculator and cashbook/device controls only. */
+.primary,.primary:hover,.home-gradient-banner,.khata-orange-header{background:linear-gradient(110deg,#06402B,#06402B);color:#fff}
+.given-text,.given-value,.will-get,.balance-get{color:#950606!important}.received-text,.received-value,.will-give,.balance-give{color:#06402B!important}
+.you-gave,.button.red{background:linear-gradient(110deg,#950606,#950606);color:#fff}.button.yellow{background:#F7B500;color:#231a00}.you-got{background:linear-gradient(110deg,#06402B,#06402B);color:#fff}
+.error,.danger,.danger-zone h2{color:#950606}.error{background:#fef2f2}.bar.given,.legend-dot.given{background:#950606}.bar.received,.legend-dot.received{background:#06402B}
+.calculator{margin-top:12px}.calculator output{display:block;color:#06402B;font-weight:700;padding:10px 0}.calculator output small{display:block;font-size:11px}.calculator-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.calculator-keys button{min-height:40px;border:1px solid #dce8df;border-radius:8px;background:#f3f8f4;color:#06402B;font-weight:600}.calculator-keys button:hover{background:#dceee2}.modal .transaction-form>footer{position:sticky;bottom:0;background:white;z-index:2;padding:10px 0}.bank-entry-buttons{flex-wrap:wrap}.ledger-entry-detail>small{display:block}.statement-table small{display:block}.statement-brand,.statement-footer{background:#06402B;color:white}.drive-backup-row{overflow-wrap:anywhere}
+@media print{body{background:#fff}.sidebar,.topbar,.page-title,.demo-banner,.mobile-bottom-nav,.sync-bar,.main-footer,.report-controls,.toast{display:none!important}.main-shell{margin:0!important}main{padding:0!important}.statement-preview{box-shadow:none;margin:0;border:0}.table-scroll{overflow:visible}.statement-table thead{display:table-header-group}.statement-table tr{break-inside:avoid}.statement-table tr.print-page-end{break-after:page}.statement-preview>.hint{display:none}.statement-table tfoot{display:table-row-group}}
+
+.auth-story,.admin-top,.khata-add-party{background:linear-gradient(110deg,#06402B,#06402B);color:#fff}.entry-icon.given{color:#950606;background:#fef2f2}.entry-icon.received{color:#06402B;background:#f0fdf4}.given-value{background:#fef2f2}.received-value{background:#f0fdf4}
+@media(max-width:600px){.modal header{background:linear-gradient(110deg,#06402B,#06402B)}}
+
+:root{--green:#06402B;--green-dark:#06402B;--red:#950606}
+.primary,.primary:hover,.home-gradient-banner,.khata-orange-header,.auth-story,.admin-top,.directory-add,.statement-brand,.statement-footer,.you-got{background:#06402B;color:#fff}
+.you-gave,.button.red{background:#950606;color:#fff}
+.given-text,.given-value,.entry-icon.given,.will-get,.balance-get{color:#950606!important}.received-text,.received-value,.entry-icon.received,.will-give,.balance-give{color:#06402B!important}
+.given-value,.entry-icon.given{background:#faece8}.received-value,.entry-icon.received{background:#eaf3ee}
+.calculator-keys{gap:7px}.calculator-keys button{min-height:44px;font-size:17px}.calculator output{font-size:17px;line-height:1.4}
+.transaction-form input[aria-label="Amount"]{font-size:20px;font-weight:600;caret-color:transparent}
+.modal .transaction-form>footer{position:static}
+nav button,.button{font-size:14px}label{font-size:14px}.hint,small,.subtle{font-size:12px;line-height:1.45}input,select,textarea{font-size:15px}table{font-size:14px}th{font-size:12px}h2{font-size:18px}.ledger-entry-detail time,.ledger-entry-meta{font-size:12px}.ledger-entry-value{font-size:17px}
+@media(max-width:600px){.modal:has(.transaction-form){max-height:calc(100dvh - 16px);overflow:hidden;display:flex;flex-direction:column}.modal:has(.transaction-form)>header{flex-shrink:0}.modal .transaction-form{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px}.modal .transaction-form>footer{position:sticky;bottom:0;z-index:3;margin-top:0;flex-shrink:0;order:100;background:white;padding-bottom:max(10px,env(safe-area-inset-bottom))}.modal .calculator{position:static;flex-shrink:0}.modal header{background:#06402B}.modal .form-row{grid-template-columns:1fr}.calculator-keys button{min-height:44px}}
+
+.entry-fields{display:grid;gap:14px}.entry-controls{min-width:0}.modal .transaction-form>.entry-controls>footer{position:static;margin:0;padding:8px 0}.entry-controls .calculator{margin-top:0}
+@media(max-width:600px){.modal .transaction-form{overflow:hidden;gap:8px}.entry-fields{min-height:60px;overflow:auto;flex:1;padding:2px}.entry-controls{flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}.entry-controls .calculator-keys{gap:5px}.entry-controls .calculator-keys button{min-height:44px}.entry-controls .calculator output{padding:5px 0}.modal .transaction-form>.entry-controls>footer{padding:6px 0}.cashbook-page{padding-bottom:80px}.cashbook-actions{position:sticky;bottom:0;display:grid;grid-template-columns:1fr 1fr;gap:12px;background:var(--bg);padding:12px 0 max(12px,env(safe-area-inset-bottom));z-index:2}.cashbook-actions button{min-height:48px}}
+.cashbook-actions{display:flex;gap:12px;margin-top:16px}.cashbook-actions button{flex:1}.cashbook-tools{display:flex;justify-content:flex-end;gap:12px;margin:12px 0}.cash-out{background:#950606;color:#fff}.cash-in{background:#06402B;color:#fff}
+.direction-toggle button.selected.given{background:#FAECE8;color:#950606}.direction-toggle button.selected.received{background:#EAF3EE;color:#06402B}.modal label,.modal .button,.direction-toggle button{font-size:14px}.mobile-bottom-nav span{font-size:12px}.statement-table th,.statement-table td{font-size:12px;line-height:1.45}.date-cell{font-size:13px}
+
+.bank-mini-totals span:first-child b,.legend-dot.received~b{color:#06402B}.bank-mini-totals span:last-child b,.legend-dot.given~b{color:#950606}
+
+.bank-summary-totals>div:first-child b{color:#06402B}.bank-summary-totals>div:nth-child(2) b{color:#950606}
+@media(max-width:600px) and (max-height:600px){.modal:has(.transaction-form){overflow:auto;display:block}.modal .transaction-form{overflow:visible;display:grid}.entry-fields{min-height:0;overflow:visible}.entry-controls{position:static}}
+
+/* Compact entry layout: amount, method/note, date/time, Save and keypad. */
+.modal{overscroll-behavior:contain}.modal::backdrop{touch-action:none}
+.modal:has(.compact-entry){width:min(520px,calc(100vw - 16px));max-height:calc(100dvh - 16px);padding:14px;overflow:auto;display:flex;flex-direction:column}.modal:has(.compact-entry)>header{margin:0;padding:0;background:transparent;min-height:20px;margin-bottom:0;flex-shrink:0;justify-content:flex-end}.modal:has(.compact-entry)>header>div{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.modal:has(.compact-entry)>header .icon-button{color:#06402B;padding:0}
+.modal .compact-entry{display:flex;flex-direction:column;overflow:visible;gap:8px;min-height:0}.compact-entry .entry-fields{display:grid;gap:8px;padding:0;overflow:visible;min-height:0}.compact-entry .entry-method-note,.compact-entry .form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.compact-entry label{font-size:13px;gap:4px;min-width:0}.compact-entry input,.compact-entry select{min-width:0;width:100%;padding:8px 10px;min-height:40px;font-size:14px}.compact-entry .amount-field input{min-height:48px;font-size:26px;font-weight:650}.compact-entry .entry-controls{display:flex;flex-direction:column;padding:0;gap:6px;flex-shrink:0}.compact-entry .entry-controls>footer{margin:0;padding:0;position:static;display:grid;gap:8px;order:0}.compact-entry footer .button{width:100%;min-height:44px;border-radius:9px}.compact-entry .calculator{margin:0;padding:0;position:static}.calculator-keys{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.calculator-keys button{height:clamp(44px,7dvh,62px);min-height:44px;font-size:24px;padding:4px}.calculator-keys .calculator-clear{grid-column:span 3;font-size:18px}.calculator-keys .calculator-zero{grid-column:span 3;font-size:30px}.calculator output{font-size:15px;padding:3px 0 6px;overflow-wrap:anywhere}
+.cashbook-page>.cashbook-actions{position:static;display:grid;grid-template-columns:1fr 1fr;margin:12px 0;padding:0;background:none}.cashbook-page{padding-bottom:0}
+@media(min-width:760px){.modal:has(.compact-entry){width:min(820px,calc(100vw - 48px));padding:24px;max-height:90dvh}.modal .compact-entry{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto;gap:16px 24px}.compact-entry .entry-fields{grid-column:1;grid-row:1;align-content:start;gap:16px}.compact-entry .entry-controls{display:contents}.compact-entry .entry-controls>footer{grid-column:1;grid-row:2}.compact-entry .calculator{grid-column:2;grid-row:1/span 2;border-left:1px solid #dce8df;padding-left:20px}.calculator-keys button{height:58px}.compact-entry label{font-size:14px}}
+.statement-table tbody td:nth-child(3),.statement-table tfoot td:nth-child(2){color:#06402B!important;background:#EAF3EE!important}.statement-table tbody td:nth-child(4),.statement-table tfoot td:nth-child(3){color:#950606!important;background:#FAECE8!important}.statement-totals>div:first-child{background:#EAF3EE}.statement-totals>div:nth-child(2){background:#FAECE8}
+.modal .compact-entry{flex:0 0 auto}.compact-entry .entry-fields{flex:none}
+
+/* Web entry parity (v1.5.9): same tap-to-edit rows as PartyLedger on mobile. */
+tbody tr.clickable-row{cursor:pointer}
+.bank-history .account-email{white-space:pre-wrap}
+
+/* One calculator everywhere (v1.5.10): the mobile keypad inside the web dialog too. */
+.modal .native-calculator .calculator-keys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.modal .native-calculator .calculator-keys button{min-height:48px;height:auto;padding:0;background:#fff;color:#141414;border:1px solid #f0f0f0;border-radius:11px;box-shadow:0 3px 5px #0003;font-size:18px;font-weight:500}
+.modal .native-calculator .calculator-keys button[data-operator]{background:#dcdcdc}
+.modal .native-calculator .calculator-keys button svg{display:block;margin:auto}
+.modal .calculator-zero{grid-column:span 2}
+.modal .calculator-enter{grid-column:4;grid-row:5/span 2}
+.modal .native-calculator .calculator-keys .calculator-clear{grid-column:auto}

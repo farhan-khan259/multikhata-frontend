@@ -1,0 +1,23 @@
+.modal{border:0;border-radius:20px;padding:28px;width:min(520px,calc(100% - 24px));max-height:90dvh;overflow:auto;box-shadow:0 20px 100px #14372830;color:var(--ink)}.modal::backdrop{background:#102e2566;backdrop-filter:blur(4px)}.modal header{display:flex;justify-content:space-between;gap:20px;margin-bottom:24px}.modal h2{margin:0;font-size:23px}.modal header p{margin:7px 0 0;color:var(--muted);font-size:13px}.modal form{display:grid;gap:16px}.modal .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.modal footer{margin-top:12px;display:flex;justify-content:flex-end;gap:10px}
+.native-entry{display:flex;flex-direction:column;position:fixed;inset:0;z-index:1000;overflow:auto;overscroll-behavior:contain;background:#fff;color:var(--ink);padding:12px 14px 16px}
+.native-entry>header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.native-entry h2{font-size:21px;margin:0}
+.native-entry .transaction-form{display:flex;flex-direction:column;flex:1 0 auto;gap:8px}
+.native-entry .entry-fields{display:grid;gap:8px;overflow:visible;min-height:0}
+.native-entry .form-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.native-entry .transaction-form > .entry-controls{display:flex;flex-direction:column;flex:1 0 auto;padding:0;gap:8px}
+.native-entry .transaction-form > .entry-controls footer{order:1;margin:0;padding:0}
+.native-entry .transaction-form > .entry-controls footer button{width:100%;min-height:46px;border-radius:999px;background:#06402B;color:white;text-transform:uppercase;box-shadow:0 3px 5px #0003}
+.native-entry .transaction-form > .entry-controls footer button.red{background:#950606}
+.native-entry .transaction-form > .entry-controls footer button.yellow{background:#F7B500;color:#231a00}
+.native-entry .native-calculator output{order:0;flex:1 0 auto;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 10px;font-size:clamp(22px,6vw,36px);line-height:1.15}
+.native-entry .native-calculator .calculator-keys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(7px,2.2vw,12px);order:2}
+.native-entry .native-calculator .calculator-keys button{min-height:clamp(44px,5.8dvh,68px);padding:0;background:#fff;color:#141414;border:1px solid #f0f0f0;border-radius:11px;box-shadow:0 3px 5px #0003;font-size:20px;font-weight:500}
+.native-entry .native-calculator .calculator-keys button[data-operator]{background:#dcdcdc}
+.native-entry .calculator-zero{grid-column:span 2}
+.native-entry .calculator-enter{grid-column:4;grid-row:5/span 2}
+.native-entry .native-calculator .calculator-keys .calculator-clear{grid-column:auto}
+.native-entry .native-calculator .calculator-keys .calculator-zero{grid-column:span 2}
+.native-entry .native-calculator .calculator-keys button{height:auto}
+.native-entry .native-calculator{display:contents}
+.native-entry .native-calculator .calculator-keys button svg{display:block;margin:auto}
