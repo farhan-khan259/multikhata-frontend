@@ -3,8 +3,8 @@
   "version": "1.5.11",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build && node scripts/cache-shell.mjs",
+    "dev": "node init && vite --host 0.0.0.0",
+    "build": "node init && vite build && node scripts/cache-shell.mjs",
     "test": "node --test test/*.test.js && npm run test:ui",
     "android:sync": "cap sync android",
     "test:ui": "vitest run test/*.ui.test.jsx --environment jsdom --maxWorkers=2 --testTimeout=15000"
